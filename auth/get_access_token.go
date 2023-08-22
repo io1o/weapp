@@ -3,6 +3,7 @@ package auth
 import "github.com/medivhzhan/weapp/v3/request"
 
 const apiGetAccessToken = "/cgi-bin/token"
+const apiGetAccessTokenStable = "/cgi-bin/stable_token"
 
 type GetAccessTokenRequest struct {
 	// 必填 填写 client_credential
@@ -24,14 +25,13 @@ type GetAccessTokenResponse struct {
 // 获取小程序全局唯一后台接口调用凭据
 // 通过 wx.login 接口获得临时登录凭证 code 后传到开发者服务器调用此接口完成登录流程。
 func (cli *Auth) GetAccessToken(req *GetAccessTokenRequest) (*GetAccessTokenResponse, error) {
-
 	api, err := cli.conbineURI(apiGetAccessToken, req, false)
 	if err != nil {
 		return nil, err
 	}
 
 	res := new(GetAccessTokenResponse)
-	err = cli.request.Get(api, res)
+	err = cli.request.Post(api, req, &res)
 	if err != nil {
 		return nil, err
 	}
